@@ -1,0 +1,32 @@
+<mat-form-field appearance="fill">
+	<mat-label>Toppings</mat-label>
+	<input type="text" matInput placeholder="Select Users" aria-label="Select Users" matInput  [matAutocomplete]="auto" [formControl]="states" >
+  <button *ngIf="states.value?.length" mat-icon-button (click)="setValue([])">
+      <mat-icon>clear</mat-icon>
+</button> 
+ 
+	<mat-autocomplete #auto="matAutocomplete" [autoActiveFirstOption]="true"
+   [displayWith]="displayWith"
+   (closed)="searching = false" (optionSelected)="setValueFromOption($event)" >
+		<mat-optgroup *ngFor="let group of stateGroupOptions$ | async">
+			<div>
+				<mat-checkbox [checked]="group.checked" (change)="toggleParent($event, group)"
+					(click)="$event.stopPropagation()">
+					{{group.letter}}
+				</mat-checkbox> 
+				<button mat-button (click)="expandDocumentTypes(group)"> 
+            <mat-icon>keyboard_arrow_down</mat-icon>
+          </button>
+			</div>
+			<mat-option *ngFor="let name of group.names" [value]="name" class="sub-item"
+				[ngClass]="isExpandCategory[group.letter] || searching ? 'list-show' : 'list-hide'">
+				<mat-checkbox [checked]="stateRecord.indexOf(name) > -1" (change)="toggleSelection($event, name, group)"
+					(click)="$event.stopPropagation()">
+					{{name.type}}
+				</mat-checkbox>  
+			</mat-option> 
+		</mat-optgroup>
+	</mat-autocomplete> 
+</mat-form-field> 
+
+<pre>{{ stateRecord | json }}</pre>
